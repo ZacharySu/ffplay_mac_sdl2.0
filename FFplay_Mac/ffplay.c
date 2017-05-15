@@ -2618,6 +2618,18 @@ static int read_thread(void *arg)
             SDL_UnlockMutex(wait_mutex);
             continue;
         }
+        
+//        if(pkt->stream_index == is->audio_stream) {
+//          printf("Audio pts:");
+//        }
+//        else if(pkt->stream_index == is->video_stream) {
+//          printf("Video pts:");
+//        }
+//        else {
+//          printf("Unknow pts:");
+//        }
+//        printf("%lld\n", pkt->pts);
+
         /* check if packet is in play range specified by user, then queue, otherwise discard */
         pkt_in_play_range = duration == AV_NOPTS_VALUE ||
                 (pkt->pts - ic->streams[pkt->stream_index]->start_time) *
