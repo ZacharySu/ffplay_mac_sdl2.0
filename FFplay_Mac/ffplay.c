@@ -2627,7 +2627,12 @@ static int read_thread(void *arg)
         if (pkt->stream_index == is->audio_stream && pkt_in_play_range) {
             packet_queue_put(&is->audioq, pkt);
         } else if (pkt->stream_index == is->video_stream && pkt_in_play_range) {
+            static int num = 0;
+            num++;
             packet_queue_put(&is->videoq, pkt);
+            double pts= pkt->pts  * av_q2d(ic->streams[pkt->stream_index]->time_base);
+            fprintf(stderr,"[cms] num %d pts %0.2f  flag %d \n",num , pts, pkt->flags);
+            
         } else if (pkt->stream_index == is->subtitle_stream && pkt_in_play_range) {
             packet_queue_put(&is->subtitleq, pkt);
         } else {
@@ -3217,7 +3222,7 @@ int ffplay(int argc, char **argv)
     av_init_packet(&flush_pkt);
     flush_pkt.data = (char *)(intptr_t)"FLUSH";
 
-    input_filename = "/Users/sunjun/Desktop/desktop/测试视频/1942Sample.avi";
+    input_filename = "http://file.live2.ksmobile.net/yolo-14945901411550392897--20170512195827.m3u8";
     is = stream_open(input_filename, file_iformat);
     if (!is) {
         fprintf(stderr, "Failed to initialize VideoState!\n");
